@@ -1,15 +1,14 @@
--- MySQL dump 10.13  Distrib 8.0.30, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.35, for Win64 (x86_64)
 --
--- Host: localhost    Database: exam_module
+-- Host: localhost    Database: exam
 -- ------------------------------------------------------
--- Server version	8.0.30
+-- Server version	8.0.35
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!50503 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
-/*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
@@ -47,7 +46,8 @@ DROP TABLE IF EXISTS `branch`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `branch` (
   `branch_name` varchar(200) DEFAULT NULL,
-  `branch_id` int DEFAULT NULL
+  `branch_id` int DEFAULT NULL,
+  KEY `branch_id_index` (`branch_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -62,6 +62,30 @@ INSERT INTO `branch` VALUES ('CS',1),('IT',2),('AIDS',3),('EXTC',4);
 UNLOCK TABLES;
 
 --
+-- Table structure for table `classroom`
+--
+
+DROP TABLE IF EXISTS `classroom`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `classroom` (
+  `room_number` varchar(10) NOT NULL,
+  `capacity` int DEFAULT NULL,
+  PRIMARY KEY (`room_number`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `classroom`
+--
+
+LOCK TABLES `classroom` WRITE;
+/*!40000 ALTER TABLE `classroom` DISABLE KEYS */;
+INSERT INTO `classroom` VALUES ('101',30),('102',5),('201',5),('202',5),('301',5),('302',5);
+/*!40000 ALTER TABLE `classroom` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `division`
 --
 
@@ -70,7 +94,8 @@ DROP TABLE IF EXISTS `division`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `division` (
   `division` varchar(100) DEFAULT NULL,
-  `div_id` int DEFAULT NULL
+  `div_id` int DEFAULT NULL,
+  KEY `division_index` (`div_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -145,7 +170,9 @@ DROP TABLE IF EXISTS `semester`;
 CREATE TABLE `semester` (
   `semester` int DEFAULT NULL,
   `ID` int NOT NULL AUTO_INCREMENT,
-  PRIMARY KEY (`ID`)
+  PRIMARY KEY (`ID`),
+  KEY `idx_semester` (`semester`),
+  KEY `semester_index` (`semester`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -157,6 +184,39 @@ LOCK TABLES `semester` WRITE;
 /*!40000 ALTER TABLE `semester` DISABLE KEYS */;
 INSERT INTO `semester` VALUES (1,1),(2,2),(3,3),(4,4),(5,5);
 /*!40000 ALTER TABLE `semester` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `student`
+--
+
+DROP TABLE IF EXISTS `student`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `student` (
+  `student_id` int NOT NULL AUTO_INCREMENT,
+  `student_name` varchar(200) DEFAULT NULL,
+  `branch_id` int DEFAULT NULL,
+  `semester` int DEFAULT NULL,
+  `division` int DEFAULT NULL,
+  PRIMARY KEY (`student_id`),
+  KEY `branch_id` (`branch_id`),
+  KEY `semester` (`semester`),
+  KEY `division` (`division`),
+  CONSTRAINT `student_ibfk_1` FOREIGN KEY (`branch_id`) REFERENCES `branch` (`branch_id`),
+  CONSTRAINT `student_ibfk_2` FOREIGN KEY (`semester`) REFERENCES `semester` (`semester`),
+  CONSTRAINT `student_ibfk_3` FOREIGN KEY (`division`) REFERENCES `division` (`div_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `student`
+--
+
+LOCK TABLES `student` WRITE;
+/*!40000 ALTER TABLE `student` DISABLE KEYS */;
+INSERT INTO `student` VALUES (1,'John Doe',1,2,1),(2,'Jane Smith',2,3,2),(3,'Alice Johnson',1,2,2),(4,'Bob Williams',3,1,1),(5,'Eva Brown',4,3,1),(6,'Michael Davis',1,1,1),(7,'Sophia Garcia',2,2,2),(8,'Olivia Martinez',3,3,1),(9,'William Rodriguez',4,2,2),(10,'Liam Taylor',1,3,2),(11,'John Doe',1,1,1),(12,'Jane Smith',1,1,1),(13,'Alice Johnson',1,1,1),(14,'Bob Williams',1,1,1),(15,'Eva Brown',1,1,1),(16,'Michael Davis',1,1,1),(17,'Sophia Garcia',1,1,1),(18,'Olivia Martinez',1,1,1),(19,'William Rodriguez',1,1,1),(20,'Liam Taylor',1,1,1);
+/*!40000 ALTER TABLE `student` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -300,4 +360,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-12-26 13:21:11
+-- Dump completed on 2023-12-29 15:17:12
